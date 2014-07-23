@@ -48,6 +48,19 @@ typedef struct {
      */
 } PyStringObject;
 
+#ifdef CC_NOTE
+typedef struct{
+    Py_ssize_t ob_refcnt;
+    struct _typeobject *ob_type;
+    /*ob_size = strlen(string)*/
+    Py_ssize_t ob_size;
+    long ob_shash;
+    int ob_sstate;
+    /*字符指针 指向一段string内存，ob_sval是string的第一个字符*/
+    char ob_sval[1];
+}PyStringObject;
+#endif
+
 #define SSTATE_NOT_INTERNED 0
 #define SSTATE_INTERNED_MORTAL 1
 #define SSTATE_INTERNED_IMMORTAL 2

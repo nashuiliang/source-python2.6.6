@@ -106,6 +106,8 @@ PyString_FromStringAndSize(const char *str, Py_ssize_t size)
     return (PyObject *) op;
 }
 
+//如果是空字符数组，则创建nullstring(如果存在则直接返回)
+//分配内存然后intent化
 PyObject *
 PyString_FromString(const char *str)
 {
@@ -953,6 +955,7 @@ string_length(PyStringObject *a)
     return Py_SIZE(a);
 }
 
+//string concat 字符串未加入到intened中
 static PyObject *
 string_concat(register PyStringObject *a, register PyObject *bb)
 {
@@ -4180,7 +4183,7 @@ PyTypeObject PyString_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "str",
     sizeof(PyStringObject),
-    sizeof(char),
+    sizeof(char),                               /*变长对象的单位长度*/
     string_dealloc,                             /* tp_dealloc */
     (printfunc)string_print,                    /* tp_print */
     0,                                          /* tp_getattr */
@@ -5119,6 +5122,7 @@ PyString_Format(PyObject *format, PyObject *args)
     return NULL;
 }
 
+//如果interned中存在一样的string则Py_DECREF(p) 返回interned中的值
 void
 PyString_InternInPlace(PyObject **p)
 {
